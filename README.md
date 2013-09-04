@@ -22,8 +22,3 @@ Available commands:
     puppet_client    Runs apt to install puppet Client, this assumes apt is setup correctly
     puppet_master    Runs apt to install puppet Master, this assumes apt is setup correctly
     puppet_run       Run puppet once checking into the master  server set by host file
-    servers          Defines a list of servers to use for fabric
-
-
-
-
