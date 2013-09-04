@@ -4,18 +4,23 @@ from fabric.api import *
 # warn_only=True
 
 env.user = 'root'
+
+# 2 specific roles are setup as master and slaves
 env.roledefs = {
    'master'  : ['192.168.45.187'],
-   'slaves'  : ['192.168.45.188']  
 }
 
-def servers():
-   """ Defines a list of servers to use for fabric """ 
-   env.hosts = open('./dist/servers.list', 'r').readlines()
+with open("./dist/servers.list") as f:
+	env.roledefs['slaves'] = f.readlines()
+
+# Host specific setup
+# def servers():
+#   """ Defines a list of servers to use for fabric """ 
+#   env.hosts = open('./dist/servers.list', 'r').readlines()
+
 
 # Key distribution and management
 # local distribution
-
 def generate_keys():
    """ Generate an SSH key to be used for password-less control """
    local("ssh-keygen -N '' -q -t rsa -f ~/.ssh/id_rsa")
@@ -24,9 +29,7 @@ def distribute_keys():
    """ Distribute keys to servers """
    local("ssh-copy-id -i ~/.ssh/id_rsa.pub %s@%s" % (env.user, env.host))
 
-# Deployment Peices
 # Hosts File for Communication 
-
 def deploy_hosts():
    """ Deploys host file in ./dist/hosts """ 
    put('./dist/hosts', '/etc/hosts')
@@ -35,11 +38,12 @@ def puppet_client():
    """ Runs apt to install puppet Client, this assumes apt is setup correctly """ 
    run('apt-get install -q -y puppet')
 
-#Needs some work
+@roles('master')
 def puppet_master():
    """ Runs apt to install puppet Master, this assumes apt is setup correctly """ 
    run('apt-get install -q -y puppetmaster') 
 
+@roles('servers')
 def puppet_run(hostn=''):
    """ Run puppet once checking into the master  server set by host file """
    run("puppet agent apply --server=master --no-daemonize --verbose --onetime")
@@ -53,11 +57,11 @@ def agent_disable():
    run('sed -i s/START=yes/START=no/ /etc/default/puppet')
    
    
-@hosts('master')
+@roles('master')
 def deploy_master():
    deploy_hosts()
 
-@hosts('slaves')
+@roles('slaves')
 def deploy_slaves():
    deploy_hosts()
 
