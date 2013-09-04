@@ -22,12 +22,12 @@ with open("./dist/servers.list") as f:
 #   env.hosts = open('./dist/servers.list', 'r').readlines()
 
 
-# Key distribution and management
-# local distribution
+# Key distribution and management from local server, if a key exists dont worry about running this  
 def generate_keys():
    """ Generate an SSH key to be used for password-less control """
    local("ssh-keygen -N '' -q -t rsa -f ~/.ssh/id_rsa")
 
+# Distribute local key to all servers
 def distribute_keys():
    """ Distribute keys to servers """
    local("ssh-copy-id -i ~/.ssh/id_rsa.pub %s@%s" % (env.user, env.host))
