@@ -13,7 +13,10 @@ env.roledefs = {
 with open("./dist/servers.list") as f:
 	env.roledefs['slaves'] = f.readlines()
 
-# Host specific setup
+# env.parallel = 'True'
+# env.password = "Password Goes Here"
+
+# Example of a Host specific enties
 # def servers():
 #   """ Defines a list of servers to use for fabric """ 
 #   env.hosts = open('./dist/servers.list', 'r').readlines()
@@ -64,4 +67,4 @@ def deploy_master():
 @roles('slaves')
 def deploy_slaves():
    deploy_hosts()
-
+   puppet_client() 
