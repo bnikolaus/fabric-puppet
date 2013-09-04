@@ -21,7 +21,6 @@ with open("./dist/servers.list") as f:
 #   """ Defines a list of servers to use for fabric """ 
 #   env.hosts = open('./dist/servers.list', 'r').readlines()
 
-
 # Key distribution and management from local server, if a key exists dont worry about running this  
 def generate_keys():
    """ Generate an SSH key to be used for password-less control """
@@ -30,7 +29,8 @@ def generate_keys():
 # Distribute local key to all servers
 def distribute_keys():
    """ Distribute keys to servers """
-   local("ssh-copy-id -i ~/.ssh/id_rsa.pub %s@%s" % (env.user, env.host))
+   local("./ssh-copy-id -i ~/.ssh/id_rsa.pub %s@%s" % (env.user, env.host))
+
 
 # Hosts File for Communication 
 def deploy_hosts():
@@ -63,6 +63,7 @@ def agent_disable():
 @roles('master')
 def deploy_master():
    deploy_hosts()
+   puppet_master()
 
 @roles('slaves')
 def deploy_slaves():
