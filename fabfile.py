@@ -1,11 +1,11 @@
 from fabric.api import *
+import getpass
 
 # env.hosts = ['host', 'host2',]
 # warn_only=True
 
 env.user = 'root'
 
-# 2 specific roles are setup as master and slaves
 env.roledefs = {
    'master'  : ['192.168.45.187'],
 }
@@ -13,8 +13,10 @@ env.roledefs = {
 with open("./dist/servers.list") as f:
 	env.roledefs['slaves'] = f.readlines()
 
-# env.parallel = 'True'
-# env.password = "Password Goes Here"
+
+env.parallel = 'True'
+#env.password = getpass.getpass('Enter passwords: ')
+
 
 # Example of a Host specific enties
 # def servers():
@@ -30,7 +32,6 @@ def generate_keys():
 def distribute_keys():
    """ Distribute keys to servers """
    local("./ssh-copy-id -i ~/.ssh/id_rsa.pub %s@%s" % (env.user, env.host))
-
 
 # Hosts File for Communication 
 def deploy_hosts():
