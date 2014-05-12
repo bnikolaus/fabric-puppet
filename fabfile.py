@@ -16,15 +16,16 @@ with open("./dist/servers.list") as f:
 	env.roledefs['slaves'] = f.readlines()
 
 
-env.parallel = 'True'
-#env.password = getpass.getpass('Enter passwords: ')
+# env.parallel = 'True'
+# env.password = getpass.getpass('Enter passwords: ')
 
 
 # Example of a Host specific enties
-# def servers():
-#   """ Defines a list of servers to use for fabric """ 
-#   env.hosts = open('./dist/servers.list', 'r').readlines()
-# Key distribution and management from local server, if a key exists dont worry about running this  
+def servers(list=""):
+   """ Defines a list of servers to use for fabric """ 
+   env.hosts = open('./dist/servers.list', 'r').readlines()
+
+#Key distribution and management from local server, if a key exists dont worry about running this  
 
 def generate_keys():
    """ Generate an SSH key to be used for password-less control """
